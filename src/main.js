@@ -56,15 +56,26 @@ function calculateBonusByProfit(index, total, seller) { //объява ф рас
  */
 function analyzeSalesData(data, options) { // берем функ и кладем в нее нашу дату и опц (ее далее распакуем)
     // @TODO: Проверка входных данных
-    if (!data || !data.sellers || !data.purchase_records || !data.products) { // если не дата и пр то ошибка
-        console.error("Ошибка: Данные отсутствуют или повреждены");
-        return []; // вернут обязательно пустой массив чтоб не сломалось (почему см @returns)
+    if (!data 
+        || !Array.isArray(data.sellers) || data.sellers.length === 0
+        || !Array.isArray(data.products) || data.products.length === 0
+        || !Array.isArray(data.purchase_records) || data.purchase_records.length === 0
+    ) {
+        throw new Error('Некорректные входные данные');
     }
     // @TODO: Проверка наличия опций
-    const { calculateRevenue, calculateBonus } = options; // смотрим в опц - это объект из двух фенкций
-    if (typeof calculateRevenue !== 'function' || typeof calculateBonus !== 'function') { //если тип не тот то ощибка
-        console.error("Ошибка: Функции для расчетов не переданы");
-        return []; // та же история
+    // Сначала проверяем, что options вообще передан и это объект
+    if (!options || typeof options !== 'object') {
+        throw new Error('Опции не переданы или не являются объектом');
+    }
+
+    // Деструктурируем
+    const { calculateRevenue, calculateBonus } = options;
+
+    // Проверяем, что ОБЕ функции на месте
+    // Именно здесь тесты Jest «падали», если одной из функций не хватало
+    if (typeof calculateRevenue !== 'function' || typeof calculateBonus !== 'function') {
+        throw new Error('Функции для расчетов не переданы');
     }
     // @TODO: Подготовка промежуточных данных для сбора статистики
     // @TODO: Индексация продавцов и товаров для быстрого доступа
