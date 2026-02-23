@@ -110,7 +110,7 @@ function analyzeSalesData(data, options) { // берем функ и кладе�
 
 
     // @TODO: Расчет выручки и прибыли для каждого продавца
-    data.purchase_receipt.forEach(receipt => { //в массиве чеков смотрим каждый чек
+    data.purchase_records.forEach(receipt => { //в массиве чеков смотрим каждый чек
         const seller = sellerIndex[receipt.seller_id]; // продавец из чека
         if (!seller) return; // если нет то ищем дальше такого же продавцв для добавления продаж
 
